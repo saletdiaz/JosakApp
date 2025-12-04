@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.AplicationNew" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Pager" parent="Theme.AplicationNew">
+        <item name="android:windowBackground">@drawable/logo_pinguino</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
 </resources>
