@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew
+package edu.josakapp.proyectoJosakapp
 
 import android.content.Intent
 import android.os.Bundle

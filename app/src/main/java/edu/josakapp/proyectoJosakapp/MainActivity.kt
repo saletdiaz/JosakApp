@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew
+package edu.josakapp.proyectoJosakapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,9 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Surface
 import androidx.navigation.compose.rememberNavController
-import edu.saletdiaz.aplicationnew.ui.navigation.NavigationHost
-import edu.saletdiaz.aplicationnew.ui.theme.AplicationNewTheme
-import edu.saletdiaz.aplicationnew.ui.view.HomeScreen
+import edu.josakapp.proyectoJosakapp.ui.navigation.NavigationHost
+import edu.josakapp.proyectoJosakapp.ui.theme.AplicationNewTheme
 
 
 class MainActivity : ComponentActivity() {

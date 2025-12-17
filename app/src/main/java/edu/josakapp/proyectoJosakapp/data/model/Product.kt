@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew.data.model
+package edu.josakapp.proyectoJosakapp.data.model
 
 /**Clase encargada de almacenar los datos necesarios del producto*/
 data class Product (val id: String,

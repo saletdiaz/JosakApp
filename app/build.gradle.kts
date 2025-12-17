@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "edu.saletdiaz.aplicationnew"
+    namespace = "edu.josakapp.proyectoJosakapp"
     compileSdk = 36
 
     defaultConfig {

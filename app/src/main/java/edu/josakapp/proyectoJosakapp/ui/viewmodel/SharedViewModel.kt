@@ -1,15 +1,12 @@
-package edu.saletdiaz.aplicationnew.ui.viewmodel
+package edu.josakapp.proyectoJosakapp.ui.viewmodel
 
 import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import edu.saletdiaz.aplicationnew.data.model.Product
-import edu.saletdiaz.aplicationnew.data.repository.ProductRepository
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import edu.josakapp.proyectoJosakapp.data.model.Product
+import edu.josakapp.proyectoJosakapp.data.repository.ProductRepository
 
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {

@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew.ui.components
+package edu.josakapp.proyectoJosakapp.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api

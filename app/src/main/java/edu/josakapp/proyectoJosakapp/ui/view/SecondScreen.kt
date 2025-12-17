@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew.ui.view
+package edu.josakapp.proyectoJosakapp.ui.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,9 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import edu.saletdiaz.aplicationnew.ui.components.AppScaffold
-import edu.saletdiaz.aplicationnew.R
-import edu.saletdiaz.aplicationnew.data.model.Product
+import edu.josakapp.proyectoJosakapp.ui.components.AppScaffold
+import edu.josakapp.proyectoJosakapp.R
+import edu.josakapp.proyectoJosakapp.data.model.Product
 
 
 @Composable

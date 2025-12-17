@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew
+package edu.josakapp.proyectoJosakapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

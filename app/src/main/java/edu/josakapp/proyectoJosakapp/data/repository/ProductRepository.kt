@@ -1,8 +1,8 @@
-package edu.saletdiaz.aplicationnew.data.repository
+package edu.josakapp.proyectoJosakapp.data.repository
 
 import android.content.Context
-import edu.saletdiaz.aplicationnew.data.model.Product
-import edu.saletdiaz.aplicationnew.R
+import edu.josakapp.proyectoJosakapp.data.model.Product
+import edu.josakapp.proyectoJosakapp.R
 
 
 /**Clase encargada de leer y cargar los productos por medio de un fichero*/

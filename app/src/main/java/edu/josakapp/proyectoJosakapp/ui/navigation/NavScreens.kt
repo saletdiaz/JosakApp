@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew.ui.navigation
+package edu.josakapp.proyectoJosakapp.ui.navigation
 
 sealed class NavScreens(val ruta: String) {
     object NavMainScreen: NavScreens("main")

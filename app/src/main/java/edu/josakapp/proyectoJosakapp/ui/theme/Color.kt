@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew.ui.theme
+package edu.josakapp.proyectoJosakapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

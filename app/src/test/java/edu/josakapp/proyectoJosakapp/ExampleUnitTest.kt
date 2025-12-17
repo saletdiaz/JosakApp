@@ -1,4 +1,4 @@
-package edu.saletdiaz.aplicationnew
+package edu.josakapp.proyectoJosakapp
 
 import org.junit.Test
 
