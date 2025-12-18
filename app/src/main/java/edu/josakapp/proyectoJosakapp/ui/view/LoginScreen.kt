@@ -13,17 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -33,9 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,9 +49,11 @@ import edu.josakapp.proyectoJosakapp.ui.theme.verdeNeon
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun LoginScreen(name: String,
-                onNameChange: (String) -> Unit,
-                onGoSecondScreen: () -> Unit){
+fun HomeScreen(name: String,
+               onNameChange: (String) -> Unit,
+               onGoSecondScreen: () -> Unit,
+               onGoRegisterScreen: () -> Unit,
+               onGoForgotPasswordScreen: () -> Unit){
     var name by remember {mutableStateOf("")}
     var pass by remember {mutableStateOf("")}
     Card (
@@ -63,32 +63,26 @@ fun LoginScreen(name: String,
         Box(
             modifier = Modifier.fillMaxSize()
         ){
-            //encabezadoHome()
-
-            /**Agregamos la imagen
+            encabezadoHome()
+            /**Agregamos la imagen*/
             Image(
-                painter = painterResource(id = R.drawable.giu),
-                contentDescription = "Mi foto",
+                painter = painterResource(id = R.drawable.fondo_claro),
+                contentDescription = "Fondo",
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Crop
-            ) */
+            )
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color.Black.copy(alpha = 0.6f))
+                    .align(Alignment.Center)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.White.copy(alpha = 0.7f))
+                    .padding(24.dp)
+            )
+            cuerpoHome(onGoSecondScreen,
+                onGoRegisterScreen, onGoForgotPasswordScreen)
 
-            Box(modifier = Modifier.matchParentSize()) {
-                Image(
-                    painter = painterResource(id = R.drawable.background),
-                    contentDescription = "josakapp",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .background(Color.Black.copy(alpha = 0.6f))
-                )
-            }
-
-            cuerpoHome(onGoSecondScreen)
         }
     }
 }
@@ -124,7 +118,9 @@ fun encabezadoHome() {
     }
 }
 @Composable
-fun cuerpoHome(onGoSecondScreen: () -> Unit){
+fun cuerpoHome(onGoSecondScreen: () -> Unit,
+               onGoRegisterScreen: () -> Unit,
+               onGoForgotPasswordScreen: () -> Unit   ){
     var name by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
     Column (
@@ -133,7 +129,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        /**Agregamos icono*/
+        /**Agregamos icono
         Icon(
             painter=painterResource(R.drawable.outline_chess_queen_24),
             contentDescription = "icono",
@@ -141,7 +137,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
                 .height(100.dp)
                 .width(100.dp),
             tint = Color.White
-        )
+        ) */
         Text(text = stringResource(R.string.acceso),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -159,7 +155,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
             },
             shape = RoundedCornerShape(25.dp),
             modifier = Modifier
-                .width(280.dp) // 👈 ancho fijo más estrecho
+                .width(280.dp)
                 .border(1.dp, Color.White, RoundedCornerShape(25.dp)),
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
@@ -171,11 +167,15 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
         )
 
         Spacer(modifier = Modifier.height(20.dp))
+
         TextField(
             value = pass,
             onValueChange = { pass = it },
             leadingIcon = {
                 Icon(painter = painterResource(R.drawable.baseline_password_24), contentDescription = "pass")
+            },
+            placeholder = {
+                Text(text = stringResource(R.string.introduce_contrasena))
             },
             shape = RoundedCornerShape(25.dp),
             modifier = Modifier
@@ -208,7 +208,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable{/**Metodo clickable*/}
+                    .clickable{onGoRegisterScreen()}
             )
             Text(text = stringResource(R.string.contrasena_olvidada),
                 color = Color.White,
@@ -216,7 +216,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable{/**Metodo clickable*/}
+                    .clickable{onGoForgotPasswordScreen()}
             )
         }
 
@@ -229,5 +229,29 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
             Text(text = stringResource(R.string.entrar),
                 fontSize = 18.sp)
         }
+
+        /***Despues del boton se debe de añadir un acceso rapido */
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            socialLoginIcon(R.drawable.ic_google) {/*Accion de entrar con google*/}
+            socialLoginIcon(R.drawable.ic_facebook) {/*Accion de entrar con google*/}
+          //  socialLoginIcon(R.drawable.ic_twitter) {/*Accion de entrar con google*/}
+            socialLoginIcon(R.drawable.ic_appel) {/*Accion de entrar con google*/}
+        }
     }
 }
+
+/**Implementamos los iconos pero se podria implementar en forma de imagen*/
+@Composable
+fun socialLoginIcon(iconRes: Int, onClick: () -> Unit){
+    Icon(
+        painter = painterResource(iconRes),
+        contentDescription = null,
+        modifier = Modifier
+            .size(50.dp)
+            .clickable(onClick = onClick)
+    )
+}
+
