@@ -57,6 +57,8 @@ dependencies {
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.2.0")
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.play.services.games)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
