@@ -15,8 +15,7 @@ import androidx.navigation.compose.composable
 import edu.josakapp.proyectoJosakapp.ui.view.ForgotPasswordScreen
 import edu.josakapp.proyectoJosakapp.ui.view.HomeScreen
 import edu.josakapp.proyectoJosakapp.ui.view.RegisterScreen
-import edu.josakapp.proyectoJosakapp.ui.view.SecondScreen
-import edu.josakapp.proyectoJosakapp.ui.view.LoginScreen
+
 import edu.josakapp.proyectoJosakapp.ui.view.HabitoScreen
 import edu.josakapp.proyectoJosakapp.ui.viewmodel.SharedViewModel
 
