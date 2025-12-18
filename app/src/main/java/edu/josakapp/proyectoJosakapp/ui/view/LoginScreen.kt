@@ -1,6 +1,5 @@
 package edu.josakapp.proyectoJosakapp.ui.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -169,7 +167,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit,
 
         TextField(
             value = pass,
-            onValueChange = {pass=it},
+            onValueChange = { pass = it },
             leadingIcon = {
                 Icon(painter = painterResource(R.drawable.baseline_password_24), contentDescription = "pass")
             },
@@ -186,8 +184,11 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit,
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
             ),
-            maxLines = 1
+            singleLine = true,
+            label = {   Text(text = stringResource(R.string.introduce_contrasena)) },
+            visualTransformation = PasswordVisualTransformation()
         )
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -220,6 +221,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit,
         Button(
             onClick = onGoSecondScreen,
             modifier = Modifier.width(200.dp)
+                .height(50.dp)
         ) {
             Text(text = stringResource(R.string.entrar),
                 fontSize = 18.sp)

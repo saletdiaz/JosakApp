@@ -1,13 +1,14 @@
 <resources>
-    <string name="app_name">aplicationNew</string>
-    <string name="introduce_nombre">Nombre</string>
+    <string name="app_name">Josakapp</string>
+    <string name="introduce_nombre">Usuario</string>
     <string name="introduce_contrasena">Contraseña</string>
-    <string name="nombre_empresa">Doodle:</string>
+    <string name="nombre_empresa">Josakapp:</string>
     <string name="usuario">Usuario</string>
     <string name="acceso">ACCESO | LOGIN</string>
-    <string name="entrar">Entrar</string>
+    <string name="entrar">Login in</string>
     <string name="registrarse">Registrarse</string>
     <string name="contrasena_olvidada">Olvide mi contraseña</string>
     <string name="segunda_pantalla">Segunda pantalla</string>
     <string name="bienvenido_usuario">Bienvenido %s</string>
+
 </resources>
