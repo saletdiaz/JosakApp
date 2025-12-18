@@ -6,7 +6,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import edu.josakapp.proyectoJosakapp.ui.view.ForgotPasswordScreen
 import edu.josakapp.proyectoJosakapp.ui.view.HomeScreen
+import edu.josakapp.proyectoJosakapp.ui.view.RegisterScreen
 import edu.josakapp.proyectoJosakapp.ui.view.SecondScreen
 import edu.josakapp.proyectoJosakapp.ui.viewmodel.SharedViewModel
 
@@ -25,10 +27,21 @@ fun NavigationHost(navController: NavHostController){
             HomeScreen(
                 name = vm.name,
                 onNameChange = vm::updateName,
-                onGoSecondScreen = {navController.navigate(NavScreens.NavSecondScreen.ruta)}
+                onGoSecondScreen = {navController.navigate(NavScreens.NavSecondScreen.ruta)},
+                onGoRegisterScreen = {navController.navigate(NavScreens.NavRegisterScreen.ruta)},
+                onGoForgotPasswordScreen = {navController.navigate(NavScreens.NavForgotPasswordScreen.ruta)}
+
+                /**Creo que aqui tiene que tener botone de registrarse y recuperar contraseña*/
             )
         }
-
+        /**REGISTER */
+        composable(NavScreens.NavRegisterScreen.ruta) {
+            RegisterScreen()
+        }
+        /**PASSWORD FORGOT*/
+        composable(NavScreens.NavForgotPasswordScreen.ruta) {
+            ForgotPasswordScreen()
+        }
         /**Segunda pantalla*/
         composable ( NavScreens.NavSecondScreen.ruta ) {
             val productos = vm.productos
