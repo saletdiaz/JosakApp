@@ -1,5 +1,6 @@
 package edu.josakapp.proyectoJosakapp.ui.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,10 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -30,9 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -44,9 +51,9 @@ import edu.josakapp.proyectoJosakapp.ui.theme.verdeNeon
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun HomeScreen(name: String,
-               onNameChange: (String) -> Unit,
-               onGoSecondScreen: () -> Unit){
+fun LoginScreen(name: String,
+                onNameChange: (String) -> Unit,
+                onGoSecondScreen: () -> Unit){
     var name by remember {mutableStateOf("")}
     var pass by remember {mutableStateOf("")}
     Card (
@@ -56,7 +63,8 @@ fun HomeScreen(name: String,
         Box(
             modifier = Modifier.fillMaxSize()
         ){
-            encabezadoHome()
+            //encabezadoHome()
+
             /**Agregamos la imagen
             Image(
                 painter = painterResource(id = R.drawable.giu),
@@ -64,13 +72,23 @@ fun HomeScreen(name: String,
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Crop
             ) */
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(Color.Black.copy(alpha = 0.6f))
-            )
-            cuerpoHome(onGoSecondScreen)
 
+            Box(modifier = Modifier.matchParentSize()) {
+                Image(
+                    painter = painterResource(id = R.drawable.background),
+                    contentDescription = "josakapp",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Black.copy(alpha = 0.6f))
+                )
+            }
+
+            cuerpoHome(onGoSecondScreen)
         }
     }
 }
@@ -153,15 +171,11 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-
         TextField(
             value = pass,
-            onValueChange = {pass=it},
+            onValueChange = { pass = it },
             leadingIcon = {
                 Icon(painter = painterResource(R.drawable.baseline_password_24), contentDescription = "pass")
-            },
-            placeholder = {
-                Text(text = stringResource(R.string.introduce_contrasena))
             },
             shape = RoundedCornerShape(25.dp),
             modifier = Modifier
@@ -173,8 +187,11 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
             ),
-            maxLines = 1
+            singleLine = true,
+            label = {   Text(text = stringResource(R.string.introduce_contrasena)) },
+            visualTransformation = PasswordVisualTransformation()
         )
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -207,6 +224,7 @@ fun cuerpoHome(onGoSecondScreen: () -> Unit){
         Button(
             onClick = onGoSecondScreen,
             modifier = Modifier.width(200.dp)
+                .height(50.dp)
         ) {
             Text(text = stringResource(R.string.entrar),
                 fontSize = 18.sp)
