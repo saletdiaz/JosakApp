@@ -14,7 +14,7 @@ data class User(
     val contrasena: String,
     val esPremium: Boolean, /*Variable cambiada, tipo_usuario**/
     val monedas: Int,
-    val fecha_registro: Long,
+    val fecha_registro: Long, //Hay que cambiarlo a date
     val xp_total: Int,
     val telefono: Int,
     val fotoPerfil: String, /**Variable nueva añadida*/

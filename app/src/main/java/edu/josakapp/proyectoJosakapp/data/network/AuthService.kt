@@ -17,6 +17,9 @@ class AuthService {
     fun register(email: String, password: String) =
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
 
+    /**Resetear contraseña**/
+    fun resetPassword(email: String) =
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
 
     /** Usuario actual */
     fun getCurrentUser() = auth.currentUser

@@ -6,14 +6,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import edu.josakapp.proyectoJosakapp.ui.viewmodel.ForgotPasswordViewModel
 
 @Composable
 fun ForgotPasswordScreen(
-    onSendRequest: (String) -> Unit = {}
+    onBack: () -> Unit,
+    viewModel: ForgotPasswordViewModel = viewModel()
 ) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -40,6 +41,7 @@ fun ForgotPasswordScreen(
             onValueChange = {
                 email = it
                 errorMessage = null
+                successMessage = null
             },
             label = { Text("Correo electrónico") },
             singleLine = true,
@@ -50,13 +52,24 @@ fun ForgotPasswordScreen(
 
         Button(
             onClick = {
-                if (email.text.isBlank()) {
-                    errorMessage = "El correo no puede estar vacío"
-                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email.text).matches()) {
-                    errorMessage = "Introduce un correo válido"
-                } else {
-                    onSendRequest(email.text)
-                    successMessage = "Si el correo existe, recibirás instrucciones"
+                when {
+                    email.text.isBlank() ->
+                        errorMessage = "El correo no puede estar vacío"
+
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email.text).matches() ->
+                        errorMessage = "Introduce un correo válido"
+
+                    else -> {
+                        viewModel.sendResetEmail(
+                            email = email.text,
+                            onSuccess = {
+                                successMessage = "Si el correo existe, recibirás instrucciones para restablecer tu contraseña"
+                            },
+                            onError = { msg ->
+                                errorMessage = msg
+                            }
+                        )
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -81,11 +94,11 @@ fun ForgotPasswordScreen(
                 textAlign = TextAlign.Center
             )
         }
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun ForgotPasswordScreenPreview() {
-    ForgotPasswordScreen()
+        Spacer(modifier = Modifier.height(24.dp))
+
+        TextButton(onClick = onBack) {
+            Text("Volver")
+        }
+    }
 }
