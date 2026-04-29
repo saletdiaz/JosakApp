@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Josakapp</string>
+    <string name="introduce_nombre">Usuario/Email</string>
+    <string name="introduce_contrasena">Contraseña</string>
+    <string name="nombre_empresa">Josakapp:</string>
+    <string name="usuario">Usuario</string>
+    <string name="acceso">ACCESO | LOGIN</string>
+    <string name="entrar">Ingresar</string>
+    <string name="registrarse">Registrarse  </string>
+    <string name="contrasena_olvidada">Olvide mi\n contraseña</string>
+    <string name="segunda_pantalla">Segunda pantalla</string>
+    <string name="bienvenido_usuario">Bienvenido %s</string>
+    <string name="txt_acceso_rapido">Acceso rápido</string>
+
+    <!--Pantalla de ajustes-->
+    <string name="txt_notificaciones">Configuración de notificaciones</string>
+
+</resources>
