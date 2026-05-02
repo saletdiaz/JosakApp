@@ -136,35 +136,57 @@ class UserRepository(
         return snapshot.size()
     }
 
+    /**
+     * Busca usuarios en Firestore por nombre de usuario usando rangos
+     * IMPORTANTE: Esto solo funciona para búsquedas por prefijo (ej: "Juan" encuentra "Juanito")
+     * @param query término de búsqueda
+     * @return Lista de usuarios encontrados (máximo 50)
+     */
     suspend fun searchUsers(query: String): List<User> {
         val db = FirebaseFirestore.getInstance()
         return try {
+            if (query.isEmpty()) {
+                Log.d("FIREBASE_SEARCH", "Query vacío, retornando lista vacía")
+                return emptyList()
+            }
+
+            // Búsqueda por prefijo: más eficiente y escala mejor
+            // whereGreaterThanOrEqualTo: "Juan" >= "Juan"
+            // whereLessThanOrEqualTo: "Juan" <= "Juan" + "\uf8ff" (último carácter Unicode)
             val snapshot = db.collection("users")
-                //.whereGreaterThanOrEqualTo("nombre_usuario", query)
-                //.whereLessThanOrEqualTo("nombre_usuario", query + "\uf8ff")
+                .whereGreaterThanOrEqualTo("nombre_usuario", query)
+                .whereLessThanOrEqualTo("nombre_usuario", query + "\uf8ff")
+                .limit(50) // ⚠️ LÍMITE IMPORTANTE para no sobrecargar el dispositivo
                 .get()
                 .await()
 
-            Log.d("FIREBASE_TEST", "Documentos totales en la nube: ${snapshot.size()}")
+            Log.d("FIREBASE_SEARCH", "Usuarios encontrados: ${snapshot.size()}")
 
+            // Mapear documentos de Firestore a objetos User
             snapshot.documents.mapNotNull { doc ->
-                User(
-                    uid = doc.getString("uid") ?: "",
-                    nombre_usuario = doc.getString("nombre_usuario") ?: "Sin nombre",
-                    email = doc.getString("email") ?: "",
-                    contrasena = doc.getString("contrasena") ?: "",
-                    esPremium = doc.getBoolean("esPremium") ?: false,
-                    monedas = doc.getLong("monedas")?.toInt() ?: 0,
-                    fecha_registro = doc.getLong("fecha_registro")?.toLong() ?: 0,
-                    xp_total = doc.getLong("xp_total")?.toInt() ?: 0,
-                    telefono = doc.getLong("telefono")?.toInt() ?: 0,
-                    fotoPerfil = doc.getString("fotoPerfil") ?: "",
-                    nivel = doc.getLong("nivel")?.toInt() ?: 0,
-                    puntos = doc.getLong("puntos")?.toInt() ?: 0,
-                    id_usuario = doc.getLong("id_usuario")?.toInt() ?: 0
-                )
-            }.filter { it.nombre_usuario.contains(query, ignoreCase = true) }
+                try {
+                    User(
+                        uid = doc.getString("uid") ?: "",
+                        nombre_usuario = doc.getString("nombre_usuario") ?: "Sin nombre",
+                        email = doc.getString("email") ?: "",
+                        contrasena = doc.getString("contrasena") ?: "",
+                        esPremium = doc.getBoolean("esPremium") ?: false,
+                        monedas = doc.getLong("monedas")?.toInt() ?: 0,
+                        fecha_registro = doc.getLong("fecha_registro")?.toLong() ?: 0,
+                        xp_total = doc.getLong("xp_total")?.toInt() ?: 0,
+                        telefono = doc.getLong("telefono")?.toInt() ?: 0,
+                        fotoPerfil = doc.getString("fotoPerfil") ?: "",
+                        nivel = doc.getLong("nivel")?.toInt() ?: 0,
+                        puntos = doc.getLong("puntos")?.toInt() ?: 0,
+                        id_usuario = doc.getLong("id_usuario")?.toInt() ?: 0
+                    )
+                } catch (e: Exception) {
+                    Log.e("FIREBASE_SEARCH", "Error mapeando usuario: ${e.message}")
+                    null
+                }
+            }
         } catch (e: Exception) {
+            Log.e("FIREBASE_SEARCH", "Error en búsqueda: ${e.message}")
             emptyList()
         }
     }
