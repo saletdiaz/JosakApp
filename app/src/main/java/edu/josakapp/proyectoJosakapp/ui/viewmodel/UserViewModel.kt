@@ -175,11 +175,22 @@ class UserViewModel (): ViewModel() {
     }
 
     fun buscarUsuarios(nombre: String) {
+        if (nombre.isBlank()) {
+            _usuariosEncontrados.value = emptyList()
+            return
+        }
         viewModelScope.launch(Dispatchers.IO) {
-            val db = FirebaseFirestore.getInstance()
-            val snapshot = db.collection("users").get().await()
-            val resultados = snapshot.toObjects(User::class.java)
-            _usuariosEncontrados.value = resultados
+            try {
+                val result = userRepository.searchUsers(nombre)
+                Log.d("BUSQUEDA_DEBUG", "1. Firebase encontró: ${result.size} usuarios")
+
+                val listaFiltrada = result.filter { it.uid != _user.value?.uid }
+                Log.d("BUSQUEDA_DEBUG", "2. Tras filtrar quedas: ${listaFiltrada.size}")
+
+                _usuariosEncontrados.value = listaFiltrada
+            } catch (e: Exception) {
+                Log.e("BUSQUEDA_DEBUG", "Error: ${e.message}")
+            }
         }
     }
 }
