@@ -136,12 +136,6 @@ class UserRepository(
         return snapshot.size()
     }
 
-    /**
-     * Busca usuarios en Firestore por nombre de usuario usando rangos
-     * IMPORTANTE: Esto solo funciona para búsquedas por prefijo (ej: "Juan" encuentra "Juanito")
-     * @param query término de búsqueda
-     * @return Lista de usuarios encontrados (máximo 50)
-     */
     suspend fun searchUsers(query: String): List<User> {
         val db = FirebaseFirestore.getInstance()
         return try {
@@ -150,19 +144,15 @@ class UserRepository(
                 return emptyList()
             }
 
-            // Búsqueda por prefijo: más eficiente y escala mejor
-            // whereGreaterThanOrEqualTo: "Juan" >= "Juan"
-            // whereLessThanOrEqualTo: "Juan" <= "Juan" + "\uf8ff" (último carácter Unicode)
             val snapshot = db.collection("users")
                 .whereGreaterThanOrEqualTo("nombre_usuario", query)
                 .whereLessThanOrEqualTo("nombre_usuario", query + "\uf8ff")
-                .limit(50) // ⚠️ LÍMITE IMPORTANTE para no sobrecargar el dispositivo
+                .limit(50)
                 .get()
                 .await()
 
             Log.d("FIREBASE_SEARCH", "Usuarios encontrados: ${snapshot.size()}")
 
-            // Mapear documentos de Firestore a objetos User
             snapshot.documents.mapNotNull { doc ->
                 try {
                     User(
