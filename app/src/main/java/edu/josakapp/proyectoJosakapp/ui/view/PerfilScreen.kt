@@ -1,5 +1,6 @@
 package edu.josakapp.proyectoJosakapp.ui.view
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -74,7 +75,8 @@ fun PerfilScreen(
     userViewModel: UserViewModel,
     onNavigateToSettings: () -> Unit,
     onCompleteProfile: () -> Unit,
-    onNavigateToSearch: () -> Unit
+    onNavigateToSearch: () -> Unit,
+    onNavigateToFollowers: (Int) -> Unit = {}
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
 
@@ -182,11 +184,19 @@ fun PerfilScreen(
                 modifier = Modifier.padding(vertical = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // Seguidores - CLICKABLE para ver la lista
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable { onNavigateToFollowers(0) }
+                ) {
                     Text("$seguidores", fontWeight = FontWeight.Bold)
                     Text("Seguidores", fontSize = 12.sp, color = Color.Gray)
                 }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // Siguiendo - CLICKABLE para ver la lista
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable { onNavigateToFollowers(1) }
+                ) {
                     Text("$siguiendo", fontWeight = FontWeight.Bold)
                     Text("Siguiendo", fontSize = 12.sp, color = Color.Gray)
                 }
@@ -229,8 +239,21 @@ fun PerfilScreen(
                 )
             }
 
+            // BOTÓN COMPARTIR - Funcional con Intent.ACTION_SEND
             IconButton(
-                onClick = { /* Lógica compartir */ },
+                onClick = {
+                    val shareText = "¡Mira mi perfil en JosakApp! 🐧\n" +
+                            "Usuario: @${activeUser.nombre_usuario}\n" +
+                            "Nivel: ${activeUser.nivel} | XP: ${activeUser.xp_total}\n\n" +
+                            "https://josakapp.com/perfil/${activeUser.uid.ifBlank { activeUser.id_usuario.toString() }}"
+                    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, "Perfil de ${activeUser.nombre_usuario} en JosakApp")
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                    }
+                    val chooserIntent = Intent.createChooser(sendIntent, "Compartir perfil via...")
+                    context.startActivity(chooserIntent)
+                },
                 modifier = Modifier
                     .background(Color.LightGray.copy(alpha = 0.2f), RoundedCornerShape(10.dp))
             ) {
@@ -238,13 +261,15 @@ fun PerfilScreen(
             }
         }
 
-        // --- 4. CUADRO "COMPLETA TU PERFIL" ---
+        // --- 4. CUADRO "COMPLETA TU PERFIL" (con soporte dark mode) ---
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp)
                 .clickable { onCompleteProfile() },
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ),
             shape = RoundedCornerShape(16.dp)
         ) {
             Row(
@@ -252,10 +277,22 @@ fun PerfilScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Completa tu perfil", fontWeight = FontWeight.Bold)
-                    Text("Añade una descripción y foto para que te reconozcan.", fontSize = 12.sp)
+                    Text(
+                        "Completa tu perfil",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    Text(
+                        "Añade una descripción y foto para que te reconozcan.",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                    )
                 }
-                Icon(Icons.Default.KeyboardArrowRight, contentDescription = null)
+                Icon(
+                    Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             }
         }
 

@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -44,6 +46,12 @@
         <receiver android:name=".ui.navigation.NotificationReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="ACTION_YES" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".ui.navigation.ReminderReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="ACTION_REMINDER" />
             </intent-filter>
         </receiver>
 

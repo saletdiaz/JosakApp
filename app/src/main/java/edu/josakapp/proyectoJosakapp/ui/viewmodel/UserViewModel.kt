@@ -36,6 +36,12 @@ class UserViewModel (): ViewModel() {
     private val _followedFriendNames = MutableStateFlow<Set<String>>(emptySet())
     val followedFriendNames: StateFlow<Set<String>> = _followedFriendNames
 
+    private val _seguidoresList = MutableStateFlow<List<edu.josakapp.proyectoJosakapp.data.model.User>>(emptyList())
+    val seguidoresList: StateFlow<List<edu.josakapp.proyectoJosakapp.data.model.User>> = _seguidoresList
+
+    private val _siguiendoList = MutableStateFlow<List<edu.josakapp.proyectoJosakapp.data.model.User>>(emptyList())
+    val siguiendoList: StateFlow<List<edu.josakapp.proyectoJosakapp.data.model.User>> = _siguiendoList
+
 
     private var currentUserId: Int? = null
 
@@ -173,6 +179,30 @@ class UserViewModel (): ViewModel() {
                 Log.d("SOCIAL_DEBUG", "Stats cargadas: Seguidores=$followers, Siguiendo=$following")
             } catch (e: Exception) {
                 Log.e("SOCIAL_DEBUG", "Error cargando stats sociales: ${e.message}")
+            }
+        }
+    }
+
+    fun loadSeguidoresList(userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val list = userRepository.getFollowersList(userId)
+                _seguidoresList.value = list
+                Log.d("SOCIAL_DEBUG", "Lista seguidores cargada: ${list.size} usuarios")
+            } catch (e: Exception) {
+                Log.e("SOCIAL_DEBUG", "Error cargando lista seguidores: ${e.message}")
+            }
+        }
+    }
+
+    fun loadSiguiendoList(userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val list = userRepository.getFollowingList(userId)
+                _siguiendoList.value = list
+                Log.d("SOCIAL_DEBUG", "Lista siguiendo cargada: ${list.size} usuarios")
+            } catch (e: Exception) {
+                Log.e("SOCIAL_DEBUG", "Error cargando lista siguiendo: ${e.message}")
             }
         }
     }

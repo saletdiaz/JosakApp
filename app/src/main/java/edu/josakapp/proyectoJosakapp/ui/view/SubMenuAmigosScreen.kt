@@ -1,5 +1,8 @@
 package edu.josakapp.proyectoJosakapp.ui.view
 
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,8 +25,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,8 +43,14 @@ import edu.josakapp.proyectoJosakapp.ui.components.SettingsScaffold
 
 @Composable
 fun SubMenuAmigosScreen(onBack: () -> Unit) {
-    var seguirByMe by remember { mutableStateOf(true) }
-    var logrosCompartidos by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val prefs = context.getSharedPreferences("amigos_notif_prefs", Context.MODE_PRIVATE)
+
+    // Cargar estado desde SharedPreferences
+    var seguirByMe by remember { mutableStateOf(prefs.getBoolean("nuevos_seguidores", true)) }
+    var logrosCompartidos by remember { mutableStateOf(prefs.getBoolean("actividad_amigos", true)) }
+
+    val colorCeleste = Color(0xFF03A9F4)
 
     SettingsScaffold(title = "AMIGOS", onBackClick = onBack) { padding ->
         Column(
@@ -64,18 +76,56 @@ fun SubMenuAmigosScreen(onBack: () -> Unit) {
                     // Opción de Seguidores
                     ListItem(
                         headlineContent = { Text("Nuevos seguidores", fontWeight = FontWeight.Bold) },
-                        supportingContent = { Text("Avisarme cuando alguien me siga.") },
+                        supportingContent = { Text("Avisarme cuando alguien me siga.", fontSize = 12.sp, color = Color.Gray) },
+                        leadingContent = {
+                            Icon(Icons.Default.PersonAdd, contentDescription = null, tint = colorCeleste)
+                        },
                         trailingContent = {
-                            Switch(checked = seguirByMe, onCheckedChange = { seguirByMe = it })
+                            Switch(
+                                checked = seguirByMe,
+                                onCheckedChange = {
+                                    seguirByMe = it
+                                    prefs.edit().putBoolean("nuevos_seguidores", it).apply()
+                                    Toast.makeText(
+                                        context,
+                                        if (it) "Notificaciones de seguidores activadas"
+                                        else "Notificaciones de seguidores desactivadas",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    checkedTrackColor = colorCeleste
+                                )
+                            )
                         }
                     )
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 20.dp), thickness = 0.5.dp)
 
                     ListItem(
                         headlineContent = { Text("Actividad de amigos", fontWeight = FontWeight.Bold) },
-                        supportingContent = { Text("Avisarme cuando un amigo complete un reto.") },
+                        supportingContent = { Text("Avisarme cuando un amigo complete un reto.", fontSize = 12.sp, color = Color.Gray) },
+                        leadingContent = {
+                            Icon(Icons.Default.Notifications, contentDescription = null, tint = colorCeleste)
+                        },
                         trailingContent = {
-                            Switch(checked = logrosCompartidos, onCheckedChange = { logrosCompartidos = it })
+                            Switch(
+                                checked = logrosCompartidos,
+                                onCheckedChange = {
+                                    logrosCompartidos = it
+                                    prefs.edit().putBoolean("actividad_amigos", it).apply()
+                                    Toast.makeText(
+                                        context,
+                                        if (it) "Notificaciones de actividad activadas"
+                                        else "Notificaciones de actividad desactivadas",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = Color.White,
+                                    checkedTrackColor = colorCeleste
+                                )
+                            )
                         }
                     )
                 }
@@ -83,7 +133,7 @@ fun SubMenuAmigosScreen(onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // LA OPCIÓN QUE TÚ PENSASTE: Invitar
+            // Invitar a amigos
             Text(
                 text = "¿Quieres hacer crecer tu comunidad?",
                 fontWeight = FontWeight.Bold,
@@ -91,10 +141,22 @@ fun SubMenuAmigosScreen(onBack: () -> Unit) {
             )
 
             Button(
-                onClick = { /* Lógica para compartir enlace */ },
+                onClick = {
+                    val shareText = "¡Únete a JosakApp! 🐧\n\n" +
+                            "Crea hábitos, sube de nivel y cuida a tu pingüino virtual.\n" +
+                            "¡Descárgala y agrégame como amigo!\n\n" +
+                            "https://josakapp.com/descargar"
+                    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, "¡Únete a JosakApp!")
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                    }
+                    val chooserIntent = Intent.createChooser(sendIntent, "Invitar amigos via...")
+                    context.startActivity(chooserIntent)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4))
+                colors = ButtonDefaults.buttonColors(containerColor = colorCeleste)
             ) {
                 Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(8.dp))

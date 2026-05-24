@@ -215,7 +215,8 @@ fun MainContainerScreen(user: User, themeViewModel: ThemeViewModel,
                         bottomNavController.navigate(NavScreens.NavAjusteScreen.ruta)
                     },
                     onCompleteProfile = {bottomNavController.navigate(NavScreens.NavCompletarPerfil.ruta)},
-                    onNavigateToSearch = {bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta)}
+                    onNavigateToSearch = {bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta)},
+                    onNavigateToFollowers = { tab -> bottomNavController.navigate("seguidores/$tab") }
                 )
             }
             composable("perfil_user/{userId}") { backStackEntry ->
@@ -242,7 +243,8 @@ fun MainContainerScreen(user: User, themeViewModel: ThemeViewModel,
                             bottomNavController.navigate(NavScreens.NavAjusteScreen.ruta)
                         },
                         onCompleteProfile = { bottomNavController.navigate(NavScreens.NavCompletarPerfil.ruta) },
-                        onNavigateToSearch = { bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta) }
+                        onNavigateToSearch = { bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta) },
+                        onNavigateToFollowers = { tab -> bottomNavController.navigate("seguidores/$tab") }
                     )
                 } else {
                     Text("Cargando perfil...")
@@ -294,6 +296,16 @@ fun MainContainerScreen(user: User, themeViewModel: ThemeViewModel,
             }
             composable(NavScreens.NavConfiguracionPrivacidadScreen.ruta) {
                 PrivacidadScreen(onBack = { bottomNavController.popBackStack() })
+            }
+            // Pantalla de Seguidores / Siguiendo
+            composable("seguidores/{tab}") { backStackEntry ->
+                val tab = backStackEntry.arguments?.getString("tab")?.toIntOrNull() ?: 0
+                SeguidoresScreen(
+                    userViewModel = userViewModel,
+                    userId = activeUser.uid.ifBlank { activeUser.id_usuario.toString() },
+                    initialTab = tab,
+                    onBack = { bottomNavController.popBackStack() }
+                )
             }
         }
     }

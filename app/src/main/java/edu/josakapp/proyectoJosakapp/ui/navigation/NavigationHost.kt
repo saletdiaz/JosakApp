@@ -125,7 +125,8 @@ fun NavigationHost(
                     userViewModel = userViewModel,
                     onNavigateToSettings = { navController.navigate(NavScreens.NavAjusteScreen.ruta) },
                     onCompleteProfile = { navController.navigate(NavScreens.NavCompletarPerfil.ruta) },
-                    onNavigateToSearch = { navController.navigate(NavScreens.NavAmigosScreen.ruta)}
+                    onNavigateToSearch = { navController.navigate(NavScreens.NavAmigosScreen.ruta)},
+                    onNavigateToFollowers = { tab -> navController.navigate("seguidores/$tab") }
                 )
             } else {
                 navController.navigate(NavScreens.NavMainScreen.ruta)
@@ -158,7 +159,8 @@ fun NavigationHost(
                     userViewModel = userViewModel,
                     onNavigateToSettings = { navController.navigate(NavScreens.NavAjusteScreen.ruta) },
                     onCompleteProfile = { navController.navigate(NavScreens.NavCompletarPerfil.ruta) },
-                    onNavigateToSearch = { navController.navigate(NavScreens.NavAmigosScreen.ruta)}
+                    onNavigateToSearch = { navController.navigate(NavScreens.NavAmigosScreen.ruta)},
+                    onNavigateToFollowers = { tab -> navController.navigate("seguidores/$tab") }
                 )
             } else {
                 // Mientras se carga, mostrar placeholder

@@ -191,6 +191,102 @@ class UserRepository(
         }
     }
 
+    /**Obtiene la lista de seguidores (usuarios que siguen a userId)*/
+    suspend fun getFollowersList(userId: String): List<User> {
+        val db = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = db.collection("social")
+                .whereEqualTo("followingId", userId)
+                .get()
+                .await()
+
+            val followerIds = snapshot.documents.mapNotNull { it.getString("followerId") }
+            Log.d("SOCIAL_DEBUG", "Seguidores IDs encontrados: $followerIds")
+
+            followerIds.mapNotNull { followerId ->
+                try {
+                    val userDoc = db.collection("users")
+                        .whereEqualTo("uid", followerId)
+                        .limit(1)
+                        .get()
+                        .await()
+
+                    userDoc.documents.firstOrNull()?.let { doc ->
+                        User(
+                            uid = doc.getString("uid") ?: "",
+                            nombre_usuario = doc.getString("nombre_usuario") ?: "Sin nombre",
+                            email = doc.getString("email") ?: "",
+                            contrasena = "",
+                            esPremium = doc.getBoolean("esPremium") ?: false,
+                            monedas = doc.getLong("monedas")?.toInt() ?: 0,
+                            fecha_registro = doc.getLong("fecha_registro") ?: 0,
+                            xp_total = doc.getLong("xp_total")?.toInt() ?: 0,
+                            telefono = doc.getLong("telefono")?.toInt() ?: 0,
+                            fotoPerfil = doc.getString("fotoPerfil") ?: "",
+                            nivel = doc.getLong("nivel")?.toInt() ?: 0,
+                            puntos = doc.getLong("puntos")?.toInt() ?: 0,
+                            id_usuario = doc.getLong("id_usuario")?.toInt() ?: 0
+                        )
+                    }
+                } catch (e: Exception) {
+                    Log.e("SOCIAL_DEBUG", "Error obteniendo seguidor $followerId: ${e.message}")
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("SOCIAL_DEBUG", "Error obteniendo lista seguidores: ${e.message}")
+            emptyList()
+        }
+    }
+
+    /**Obtiene la lista de usuarios a los que sigue userId*/
+    suspend fun getFollowingList(userId: String): List<User> {
+        val db = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = db.collection("social")
+                .whereEqualTo("followerId", userId)
+                .get()
+                .await()
+
+            val followingIds = snapshot.documents.mapNotNull { it.getString("followingId") }
+            Log.d("SOCIAL_DEBUG", "Siguiendo IDs encontrados: $followingIds")
+
+            followingIds.mapNotNull { followingId ->
+                try {
+                    val userDoc = db.collection("users")
+                        .whereEqualTo("uid", followingId)
+                        .limit(1)
+                        .get()
+                        .await()
+
+                    userDoc.documents.firstOrNull()?.let { doc ->
+                        User(
+                            uid = doc.getString("uid") ?: "",
+                            nombre_usuario = doc.getString("nombre_usuario") ?: "Sin nombre",
+                            email = doc.getString("email") ?: "",
+                            contrasena = "",
+                            esPremium = doc.getBoolean("esPremium") ?: false,
+                            monedas = doc.getLong("monedas")?.toInt() ?: 0,
+                            fecha_registro = doc.getLong("fecha_registro") ?: 0,
+                            xp_total = doc.getLong("xp_total")?.toInt() ?: 0,
+                            telefono = doc.getLong("telefono")?.toInt() ?: 0,
+                            fotoPerfil = doc.getString("fotoPerfil") ?: "",
+                            nivel = doc.getLong("nivel")?.toInt() ?: 0,
+                            puntos = doc.getLong("puntos")?.toInt() ?: 0,
+                            id_usuario = doc.getLong("id_usuario")?.toInt() ?: 0
+                        )
+                    }
+                } catch (e: Exception) {
+                    Log.e("SOCIAL_DEBUG", "Error obteniendo seguido $followingId: ${e.message}")
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("SOCIAL_DEBUG", "Error obteniendo lista siguiendo: ${e.message}")
+            emptyList()
+        }
+    }
+
     fun isUserLogged(): Boolean = authService.getCurrentUser() != null
 
     fun getUsersWithHabitos() = local.getUsersWithHabitos()
