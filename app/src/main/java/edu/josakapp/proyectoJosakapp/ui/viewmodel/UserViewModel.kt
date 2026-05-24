@@ -42,8 +42,15 @@ class UserViewModel (): ViewModel() {
     private val _siguiendoList = MutableStateFlow<List<edu.josakapp.proyectoJosakapp.data.model.User>>(emptyList())
     val siguiendoList: StateFlow<List<edu.josakapp.proyectoJosakapp.data.model.User>> = _siguiendoList
 
+    private val _visitedUser = MutableStateFlow<User?>(null)
+    val visitedUser: StateFlow<User?> = _visitedUser
 
     private var currentUserId: Int? = null
+
+
+    fun setVisitedUser(user: User?) {
+        _visitedUser.value = user
+    }
 
     /** Se llama desde el login cuando ya tenemos el User cargado */
     fun setUser(user: User) {
