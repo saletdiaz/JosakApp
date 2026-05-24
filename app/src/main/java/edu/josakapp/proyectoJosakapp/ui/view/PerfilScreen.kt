@@ -17,37 +17,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -91,7 +80,7 @@ fun PerfilScreen(
         user
     }
     val isOwnProfile = currentUser != null &&
-        (currentUser.uid == user.uid || currentUser.id_usuario == user.id_usuario)
+            (currentUser.uid == user.uid || currentUser.id_usuario == user.id_usuario)
 
     val seguidores by userViewModel.seguidoresCount.collectAsState()
     val siguiendo by userViewModel.siguiendoCount.collectAsState()
@@ -316,32 +305,6 @@ fun PerfilScreen(
                 /*Aqui comente posicion por que no hay ningun id, que tenga la posicion*/
             }
         }
-
-        // --- 6. LOGROS ---
-        Text(
-            text = "Mis Logros",
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 8.dp),
-            fontWeight = FontWeight.Bold
-        )
-
-        // Simulación de fila de logros
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            repeat(4) {
-                Surface(
-                    modifier = Modifier.size(60.dp),
-                    shape = CircleShape,
-                    color = Color.LightGray.copy(alpha = 0.2f)
-                ) {
-                    Icon(Icons.Default.Star, contentDescription = null, modifier = Modifier.padding(15.dp), tint = Color.Gray)
-                }
-            }
-        }
-
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
