@@ -142,7 +142,9 @@ fun PerfilScreen(
                     .size(100.dp)
                     .align(Alignment.Center)
                     .clickable{
-                        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        if (isOwnProfile) {
+                            launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        }
                     },
                 shape = CircleShape,
                 color = Color.LightGray.copy(alpha = 0.3f),
@@ -180,13 +182,20 @@ fun PerfilScreen(
 
             Row(
                 modifier = Modifier.padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp)
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable { /* Navegar a lista de seguidores */ }
+                ) {
                     Text("$seguidores", fontWeight = FontWeight.Bold)
                     Text("Seguidores", fontSize = 12.sp, color = Color.Gray)
                 }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable { /* Navegar a lista de siguiendo */ }
+                ) {
                     Text("$siguiendo", fontWeight = FontWeight.Bold)
                     Text("Siguiendo", fontSize = 12.sp, color = Color.Gray)
                 }
@@ -230,7 +239,14 @@ fun PerfilScreen(
             }
 
             IconButton(
-                onClick = { /* Lógica compartir */ },
+                onClick = {
+                    val mensaje = "¡Mira el perfil de @${activeUser.nombre_usuario} en JosakApp! 🚀"
+                    val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(android.content.Intent.EXTRA_TEXT, mensaje)
+                    }
+                    context.startActivity(android.content.Intent.createChooser(intent, "Compartir perfil"))
+                },
                 modifier = Modifier
                     .background(Color.LightGray.copy(alpha = 0.2f), RoundedCornerShape(10.dp))
             ) {
@@ -275,33 +291,6 @@ fun PerfilScreen(
             Spacer(modifier = Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 StatSmallCard("Rango", "${activeUser.nivel}", Icons.Default.EmojiEvents, Color(0xFF03A9F4), Modifier.weight(1f))
-                //  StatSmallCard("Posición", "${user.}", Icons.Default.BarChart, Color(0xFF4CAF50), Modifier.weight(1f))
-                /*Aqui comente posicion por que no hay ningun id, que tenga la posicion*/
-            }
-        }
-
-        // --- 6. LOGROS ---
-        Text(
-            text = "Mis Logros",
-            modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 8.dp),
-            fontWeight = FontWeight.Bold
-        )
-
-        // Simulación de fila de logros
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            repeat(4) {
-                Surface(
-                    modifier = Modifier.size(60.dp),
-                    shape = CircleShape,
-                    color = Color.LightGray.copy(alpha = 0.2f)
-                ) {
-                    Icon(Icons.Default.Star, contentDescription = null, modifier = Modifier.padding(15.dp), tint = Color.Gray)
-                }
             }
         }
 
