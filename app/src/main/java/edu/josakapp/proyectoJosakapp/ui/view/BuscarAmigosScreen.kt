@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import edu.josakapp.proyectoJosakapp.ui.viewmodel.UserViewModel
 
 @Composable
@@ -45,56 +49,75 @@ fun BuscarAmigosScreen(
         userViewModel.loadFollowedFriends()
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        // Buscador
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = {
-                searchText = it
-                userViewModel.buscarUsuarios(it)
-            },
-            label = { Text("Buscar por nombre de usuario") },
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
-        )
+    Column(modifier = Modifier.fillMaxSize()) {
+        // BOTÓN ATRÁS EN LA CABECERA
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.Black)
+            }
+            Text("Buscar Amigos", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-        if (searchText.isEmpty()) {
-            Text("Escribe un nombre para empezar a buscar...", modifier = Modifier.padding(16.dp))
-        } else if (usuarios.isEmpty()) {
-            Text(
-                "No se encontró a ningún usuario llamado '$searchText'",
-                modifier = Modifier.padding(16.dp),
-                color = Color.Red
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)) {
+            // Buscador
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = {
+                    searchText = it
+                    userViewModel.buscarUsuarios(it)
+                },
+                label = { Text("Buscar por nombre de usuario") },
+                modifier = Modifier.fillMaxWidth(),
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
             )
-        } else {
-            LazyColumn {
-                items(usuarios) { usuarioEncontrado ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // Nombre del usuario
-                            Text(
-                                text = usuarioEncontrado.nombre_usuario,
-                                modifier = Modifier.weight(1f)
-                            )
 
-                            val isFollowing = followedNames.contains(usuarioEncontrado.nombre_usuario)
-                            Button(
-                                onClick = {
-                                    userViewModel.followTargetUser(miId, usuarioEncontrado.uid, usuarioEncontrado.nombre_usuario)
-                                },
-                                enabled = !isFollowing,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (isFollowing) Color(0xFF4CAF50) else Color(0xFF03A9F4)
-                                )
+            Spacer(modifier = Modifier.height(16.dp))
+            if (searchText.isEmpty()) {
+                Text("Escribe un nombre para empezar a buscar...", modifier = Modifier.padding(16.dp))
+            } else if (usuarios.isEmpty()) {
+                Text(
+                    "No se encontró a ningún usuario llamado '$searchText'",
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Red
+                )
+            } else {
+                LazyColumn {
+                    items(usuarios) { usuarioEncontrado ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(if (isFollowing) "Siguiendo" else "Seguir")
+                                // Nombre del usuario
+                                Text(
+                                    text = usuarioEncontrado.nombre_usuario,
+                                    modifier = Modifier.weight(1f)
+                                )
+
+                                val isFollowing = followedNames.contains(usuarioEncontrado.nombre_usuario)
+                                Button(
+                                    onClick = {
+                                        userViewModel.followTargetUser(miId, usuarioEncontrado.uid, usuarioEncontrado.nombre_usuario)
+                                    },
+                                    enabled = !isFollowing,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (isFollowing) Color(0xFF4CAF50) else Color(0xFF03A9F4)
+                                    )
+                                ) {
+                                    Text(if (isFollowing) "Siguiendo" else "Seguir")
+                                }
                             }
                         }
                     }
