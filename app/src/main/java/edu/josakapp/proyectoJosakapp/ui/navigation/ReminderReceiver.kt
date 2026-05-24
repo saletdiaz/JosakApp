@@ -25,7 +25,7 @@ class ReminderReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("REMINDER", "🔔 Alarma de recordatorio recibida a las ${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())}")
+        Log.d("REMINDER", " Alarma de recordatorio recibida a las ${java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())}")
 
         // Crear canal de notificación (necesario para Android 8+)
         createNotificationChannel(context)
@@ -76,7 +76,7 @@ class ReminderReceiver : BroadcastReceiver() {
 
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(NOTIFICATION_ID, notification)
-        Log.d("REMINDER", "✅ Notificación mostrada correctamente")
+        Log.d("REMINDER", " Notificación mostrada correctamente")
     }
 
     /**
@@ -129,7 +129,7 @@ class ReminderReceiver : BroadcastReceiver() {
                     pendingIntent
                 )
             }
-            Log.d("REMINDER", "🔄 Próxima alarma reprogramada para mañana a las $time")
+            Log.d("REMINDER", " Próxima alarma reprogramada para mañana a las $time")
         } catch (e: Exception) {
             Log.e("REMINDER", "Error reprogramando alarma: ${e.message}")
         }

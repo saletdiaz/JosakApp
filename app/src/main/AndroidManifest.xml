@@ -49,11 +49,10 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.navigation.ReminderReceiver" android:exported="false">
-            <intent-filter>
-                <action android:name="ACTION_REMINDER" />
-            </intent-filter>
-        </receiver>
+        <receiver
+            android:name=".ui.navigation.ReminderReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
     </application>
 

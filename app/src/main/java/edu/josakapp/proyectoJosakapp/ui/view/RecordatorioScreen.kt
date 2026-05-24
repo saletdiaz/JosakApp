@@ -250,15 +250,17 @@ private fun scheduleReminder(context: Context, time: String) {
     val hour = parts.getOrNull(0)?.toIntOrNull() ?: 8
     val minute = parts.getOrNull(1)?.toIntOrNull() ?: 30
 
+    val now = Calendar.getInstance()
+
     val calendar = Calendar.getInstance().apply {
         set(Calendar.HOUR_OF_DAY, hour)
         set(Calendar.MINUTE, minute)
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
 
-        // Si la hora ya pasó hoy, programar para mañana
-        if (before(Calendar.getInstance())) {
-            add(Calendar.DAY_OF_MONTH, 1)
+        // 👉 Si la hora ya ha pasado hoy, programamos para dentro de 1 minuto
+        if (before(now)) {
+            timeInMillis = now.timeInMillis + 60_000 // 1 minuto desde ahora
         }
     }
 
@@ -274,61 +276,41 @@ private fun scheduleReminder(context: Context, time: String) {
 
     try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // Android 12+ necesita verificar permiso de alarmas exactas
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
                     pendingIntent
                 )
-                Log.d("REMINDER", "✅ Alarma EXACTA programada para $time (millis=${calendar.timeInMillis})")
             } else {
-                // No tiene permiso, pedir que lo active en ajustes
-                Toast.makeText(
-                    context,
-                    "Activa los permisos de alarmas exactas en Ajustes",
-                    Toast.LENGTH_LONG
-                ).show()
-                try {
-                    val settingsIntent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    context.startActivity(settingsIntent)
-                } catch (e: Exception) {
-                    Log.e("REMINDER", "No se pudo abrir ajustes de alarmas: ${e.message}")
-                }
-                // Fallback: alarma no exacta
                 alarmManager.setAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
                     pendingIntent
                 )
-                Log.d("REMINDER", "⚠️ Alarma NO-EXACTA programada (sin permiso exacto)")
             }
         } else {
-            // Android 6-11: setExactAndAllowWhileIdle funciona directamente
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 pendingIntent
             )
-            Log.d("REMINDER", "✅ Alarma EXACTA programada para $time")
         }
+        Log.d("REMINDER", " Alarma EXACTA programada para $time (millis=${calendar.timeInMillis})")
     } catch (e: Exception) {
-        Log.e("REMINDER", "❌ Error al programar alarma: ${e.message}")
-        // Último fallback: alarma simple
+        Log.e("REMINDER", " Error al programar alarma: ${e.message}")
         try {
             alarmManager.set(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 pendingIntent
             )
-            Log.d("REMINDER", "⚠️ Alarma simple programada como fallback")
         } catch (e2: Exception) {
-            Log.e("REMINDER", "❌ Error total al programar alarma: ${e2.message}")
+            Log.e("REMINDER", " Error total al programar alarma: ${e2.message}")
         }
     }
 }
+
 
 /**
  * Cancela la alarma de recordatorio previamente programada.
