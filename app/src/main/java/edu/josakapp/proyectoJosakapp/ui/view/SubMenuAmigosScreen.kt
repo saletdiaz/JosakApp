@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,11 +47,11 @@ fun SubMenuAmigosScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val prefs = context.getSharedPreferences("amigos_notif_prefs", Context.MODE_PRIVATE)
 
-    // Cargar estado desde SharedPreferences
     var seguirByMe by remember { mutableStateOf(prefs.getBoolean("nuevos_seguidores", true)) }
     var logrosCompartidos by remember { mutableStateOf(prefs.getBoolean("actividad_amigos", true)) }
 
     val colorCeleste = Color(0xFF03A9F4)
+
 
     SettingsScaffold(title = "AMIGOS", onBackClick = onBack) { padding ->
         Column(

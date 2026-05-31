@@ -17,26 +17,37 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -80,7 +91,7 @@ fun PerfilScreen(
         user
     }
     val isOwnProfile = currentUser != null &&
-            (currentUser.uid == user.uid || currentUser.id_usuario == user.id_usuario)
+        (currentUser.uid == user.uid || currentUser.id_usuario == user.id_usuario)
 
     val seguidores by userViewModel.seguidoresCount.collectAsState()
     val siguiendo by userViewModel.siguiendoCount.collectAsState()
@@ -171,20 +182,19 @@ fun PerfilScreen(
 
             Row(
                 modifier = Modifier.padding(vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(24.dp)
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Seguidores - CLICKABLE para ver la lista
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.clickable { onNavigateToFollowers(0) }
+                    modifier = Modifier.clickable { /* Navegar a lista de seguidores */ }
                 ) {
                     Text("$seguidores", fontWeight = FontWeight.Bold)
                     Text("Seguidores", fontSize = 12.sp, color = Color.Gray)
                 }
-                // Siguiendo - CLICKABLE para ver la lista
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.clickable { onNavigateToFollowers(1) }
+                    modifier = Modifier.clickable { /* Navegar a lista de siguiendo */ }
                 ) {
                     Text("$siguiendo", fontWeight = FontWeight.Bold)
                     Text("Siguiendo", fontSize = 12.sp, color = Color.Gray)
@@ -213,7 +223,7 @@ fun PerfilScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = when {
                         isOwnProfile -> Color(0xFF03A9F4)
-                        isAlreadyFriend -> Color(0xFF03A9F4)
+                        isAlreadyFriend -> Color(0xFF66BB6A)
                         else -> Color(0xFF03A9F4)
                     },
                     disabledContainerColor = Color(0xFF66BB6A)
@@ -228,7 +238,6 @@ fun PerfilScreen(
                 )
             }
 
-            // BOTÓN COMPARTIR - Funcional con Intent.ACTION_SEND
             IconButton(
                 onClick = {
                     val shareText = "¡Mira mi perfil en JosakApp! 🐧\n" +
@@ -250,7 +259,7 @@ fun PerfilScreen(
             }
         }
 
-        // --- 4. CUADRO "COMPLETA TU PERFIL" (con soporte dark mode) ---
+        // --- 4. CUADRO "COMPLETA TU PERFIL" ---
         Card(
             modifier = Modifier
                 .fillMaxWidth()
