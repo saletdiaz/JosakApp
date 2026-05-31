@@ -1,6 +1,7 @@
 package edu.josakapp.proyectoJosakapp.ui.view
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,8 @@ fun SeguidoresScreen(
     userViewModel: UserViewModel,
     userId: String,
     initialTab: Int = 0,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onUserClick: (User) -> Unit
 ) {
     var selectedTab by remember { mutableIntStateOf(initialTab) }
     val seguidores by userViewModel.seguidoresList.collectAsState()
@@ -134,7 +136,9 @@ fun SeguidoresScreen(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     items(currentList) { user ->
-                        SocialUserCard(user = user)
+                        SocialUserCard(user = user, onClick = { clickedUser ->
+                            onUserClick(clickedUser)
+                        })
                     }
                 }
             }
@@ -143,11 +147,13 @@ fun SeguidoresScreen(
 }
 
 @Composable
-private fun SocialUserCard(user: User) {
+private fun SocialUserCard(user: User,
+                           onClick: (User) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .clickable {onClick(user)},
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.3f))

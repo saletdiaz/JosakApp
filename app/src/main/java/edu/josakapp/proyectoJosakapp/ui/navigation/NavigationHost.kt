@@ -116,6 +116,7 @@ fun NavigationHost(
             }
         }
         }*/
+        /*
         composable(NavScreens.NavPerfilScreen.ruta) {
             val user = userViewModel. user.collectAsState().value
 
@@ -131,7 +132,8 @@ fun NavigationHost(
             } else {
                 navController.navigate(NavScreens.NavMainScreen.ruta)
             }
-        }
+        }*/
+
         // Perfil de otro usuario por id
         composable("perfil_user/{userId}") { backStackEntry ->
             val userIdStr = backStackEntry.arguments?.getString("userId")

@@ -213,7 +213,7 @@ fun PerfilScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = when {
                         isOwnProfile -> Color(0xFF03A9F4)
-                        isAlreadyFriend -> Color(0xFF66BB6A)
+                        isAlreadyFriend -> Color(0xFF03A9F4)
                         else -> Color(0xFF03A9F4)
                     },
                     disabledContainerColor = Color(0xFF66BB6A)

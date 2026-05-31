@@ -207,17 +207,26 @@ fun MainContainerScreen(user: User, themeViewModel: ThemeViewModel,
                     }
                 )
             }
-            composable(NavScreens.NavPerfilScreen.ruta) {
-                PerfilScreen(
-                    user = activeUser,
-                    userViewModel = userViewModel,
-                    onNavigateToSettings = {
-                        bottomNavController.navigate(NavScreens.NavAjusteScreen.ruta)
-                    },
-                    onCompleteProfile = {bottomNavController.navigate(NavScreens.NavCompletarPerfil.ruta)},
-                    onNavigateToSearch = {bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta)},
-                    onNavigateToFollowers = { tab -> bottomNavController.navigate("seguidores/$tab") }
-                )
+            composable("perfil_user") {
+                val visited by userViewModel.visitedUser.collectAsState()
+                if (visited != null) {
+                    PerfilScreen(
+                        user = visited!!,
+                        userViewModel = userViewModel,
+                        onNavigateToSettings = {
+                            bottomNavController.navigate(NavScreens.NavAjusteScreen.ruta)
+                        },
+                        onCompleteProfile = {
+                            bottomNavController.navigate(NavScreens.NavCompletarPerfil.ruta)
+                        },
+                        onNavigateToSearch = {
+                            bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta)
+                        },
+                        onNavigateToFollowers = { tab ->
+                            bottomNavController.navigate("seguidores/$tab")
+                        }
+                    )
+                }
             }
             composable("perfil_user/{userId}") { backStackEntry ->
                 val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull()
@@ -304,7 +313,21 @@ fun MainContainerScreen(user: User, themeViewModel: ThemeViewModel,
                     userViewModel = userViewModel,
                     userId = activeUser.uid.ifBlank { activeUser.id_usuario.toString() },
                     initialTab = tab,
-                    onBack = { bottomNavController.popBackStack() }
+                    onBack = { bottomNavController.popBackStack() },
+                    onUserClick = { amigo ->
+                        userViewModel.setVisitedUser(amigo)
+                        bottomNavController.navigate("perfil_user")
+                    }
+                )
+            }
+            composable(NavScreens.NavPerfilScreen.ruta) {
+                PerfilScreen(
+                    user = activeUser,
+                    userViewModel = userViewModel,
+                    onNavigateToSettings = { bottomNavController.navigate(NavScreens.NavAjusteScreen.ruta) },
+                    onCompleteProfile = { bottomNavController.navigate(NavScreens.NavCompletarPerfil.ruta) },
+                    onNavigateToSearch = { bottomNavController.navigate(NavScreens.NavBuscarAmigosSreen.ruta)},
+                    onNavigateToFollowers = { tab -> bottomNavController.navigate("seguidores/$tab") }
                 )
             }
         }
