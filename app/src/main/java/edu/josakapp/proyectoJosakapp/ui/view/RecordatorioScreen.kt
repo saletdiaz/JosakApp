@@ -258,7 +258,6 @@ private fun scheduleReminder(context: Context, time: String) {
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
 
-        // 👉 Si la hora ya ha pasado hoy, programamos para dentro de 1 minuto
         if (before(now)) {
             timeInMillis = now.timeInMillis + 60_000 // 1 minuto desde ahora
         }
