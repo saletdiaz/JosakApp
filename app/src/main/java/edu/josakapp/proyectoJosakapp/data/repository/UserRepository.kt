@@ -115,7 +115,23 @@ class UserRepository(
             android.util.Log.e("FIREBASE_SOCIAL", "Error al guardar relación: ${e.message}")
         }
     }
+    suspend fun deleteAccountCompletely(user: User):Boolean {
+        return try {
+            val firebaseAuthUser = authService.getCurrentUser()
 
+            if (firebaseAuthUser != null && firebaseAuthUser.uid == user.uid) {
+                remote.deleteUser(user.uid)
+
+                firebaseAuthUser.delete().await()
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("DELETE_ACCOUNT", "Error eliminando cuenta: ${e.message}")
+            false
+        }
+    }
     suspend fun addFriendLocal(nombre: String) {
         local.insertAmigo(nombre)
     }

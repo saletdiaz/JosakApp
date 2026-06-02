@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -60,7 +61,7 @@ fun CompletarPerfilScreen(user: User, userViewModel: UserViewModel, onBack: () -
     var email by remember { mutableStateOf(user.email ?: "") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val context = androidx.compose.ui.platform.LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -69,7 +70,31 @@ fun CompletarPerfilScreen(user: User, userViewModel: UserViewModel, onBack: () -
             userViewModel.uploadProfilePicture(context, uri)
         }
     }
-
+    // --- ALERTA DE CONFIRMACIÓN PARA ELIMINAR CUENTA ---
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("¿Eliminar cuenta definitivamente?") },
+            text = { Text("Esta acción es irreversible. Se perderán de forma permanente todos tus hábitos, estadísticas, monedas y configuraciones del pingüino.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        userViewModel.deleteUserAccount(context) {
+                            onBack()
+                        }
+                    }
+                ) {
+                    Text("ELIMINAR", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("CANCELAR")
+                }
+            }
+        )
+    }
     SettingsScaffold(title = "EDITAR PERFIL", onBackClick = onBack) { padding ->
         Column(
             modifier = Modifier
@@ -172,7 +197,15 @@ fun CompletarPerfilScreen(user: User, userViewModel: UserViewModel, onBack: () -
 
             // --- 3. BOTONES DE ACCIÓN ---
             Button(
-                onClick = { /* Lógica para guardar cambios */ },
+                onClick = {
+                    val usuarioEditado = user.copy(
+                        nombre_usuario = nombreUsuario,
+                        email = email,
+                        contrasena = if (password.isNotBlank()) password else user.contrasena
+                    )
+                    userViewModel.updateUser(usuarioEditado)
+                    onBack()
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4))
@@ -184,7 +217,7 @@ fun CompletarPerfilScreen(user: User, userViewModel: UserViewModel, onBack: () -
 
             // Botón de eliminar cuenta
             TextButton(
-                onClick = { /* Lógica de eliminación con alerta */ },
+                onClick = { showDeleteDialog = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

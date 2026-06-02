@@ -60,6 +60,16 @@ class UserViewModel (): ViewModel() {
     /** Si quieres actualizar datos del usuario */
     fun updateUser(updated: User) {
         _user.value = updated
+
+        viewModelScope.launch {
+            try {
+                userRepository.insertUser(updated)
+                userRepository.syncUserToRemote(updated)
+                Log.d("UserViewModel", "Usuario actualizado: $updated")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Error actualizando usuario", e)
+            }
+        }
     }
 
     fun refreshUser(userId: Int) {
@@ -98,7 +108,24 @@ class UserViewModel (): ViewModel() {
             }
         }
     }
+    fun deleteUserAccount(context: android.content.Context, onComplete: () -> Unit) {
+        val currentUser = _user.value ?: return
 
+        viewModelScope.launch {
+            // Mostramos un aviso de procesamiento
+            android.widget.Toast.makeText(context, "Eliminando cuenta...", android.widget.Toast.LENGTH_SHORT).show()
+
+            val success = userRepository.deleteAccountCompletely(currentUser)
+
+            if (success) {
+                _user.value = null // Limpiamos el estado local
+                android.widget.Toast.makeText(context, "Cuenta eliminada correctamente", android.widget.Toast.LENGTH_LONG).show()
+                onComplete() // Callback para mandar al usuario a la pantalla de bienvenida/login
+            } else {
+                android.widget.Toast.makeText(context, "Error: Reautentícate e inténtalo de nuevo", android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
+    }
     fun refreshCurrentUser(userId: Int) {
         viewModelScope.launch {
             try {

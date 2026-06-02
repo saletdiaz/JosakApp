@@ -27,4 +27,8 @@ class UserRemoteRepository {
     suspend fun saveUser(user: UserRemote) {
         usersRef.document(user.uid).set(user, SetOptions.merge()).await()
     }
+
+    suspend fun deleteUser(uid: String) {
+        usersRef.document(uid).delete().await()
+    }
 }

@@ -39,7 +39,7 @@
 
 ---
 
-## 3. Tecnologías Utilizadas
+## 3. Tecnologías Utilizadas<
 
  Capa - Tecnología 
  UI - Jetpack Compose 
